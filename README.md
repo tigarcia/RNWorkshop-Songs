@@ -509,7 +509,10 @@ This is a core concept in react that is often confused.  The rule is, __never mo
 
 For example:
 
-```
+```js
+import React, { Component } from 'react';
+import {View, Text, Button} from 'react-native';
+
 export default class Welcome extends Component {
   constructor(props) {
     super(props);
