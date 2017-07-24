@@ -728,6 +728,7 @@ Navigation has been a bit of a community pain point for react native.  Here is a
 * __Navigator__ - Also part of react-native.  Implemented in JS.  Also seems out of favor. __<span style="color:red">NOT RECOMENDED</span>__
 * __NavigationExperimental__ - Part of react-native. A popular choice if you are adding redux to your app.  Not recommended if you do not use redux.
 * __react-native-navigation__ - A native implementation of navigation from wix.  If you want native components, this is a good bet.
+* __React Router 4__ - Popular in the web world.  This is a viable option as well.  A description of the features is in [this talk](https://www.youtube.com/watch?v=42ogpJVwtw0)
 * __ex-navigation__ - Exponent's navigation library.  Popular but not being actively supported.  Instead...
 * __react-navigation__ - A new project supported by exponent and facebook. The plan is for react-navigation to replace NavigationExperimental.  Check it out at [https://reactnavigation.org/](https://reactnavigation.org/)
 
