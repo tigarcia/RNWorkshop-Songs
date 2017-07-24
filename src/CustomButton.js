@@ -6,15 +6,23 @@ import {
 } from 'react-native';
 
 export default props => (
-  <TouchableOpacity style={styles.buttonContainer}>
+  <TouchableOpacity
+    style={styles.buttonContainer}
+    onPress={props.onPress}>
     <Text style={styles.buttonText}>
+      {props.title}
     </Text>
   </TouchableOpacity>
-)
+);
 
 const styles = StyleSheet.create({
   buttonContainer: {
+    borderRadius: 4,
+    backgroundColor: "blue",
+    padding:10
   },
   buttonText: {
+    color: 'white',
+    fontSize: 25
   }
 });
