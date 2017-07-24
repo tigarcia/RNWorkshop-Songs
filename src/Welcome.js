@@ -1,24 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
-} from 'react-native'
+  Text,
+  View,
+  Button
+} from 'react-native';
 import CustomButton from './CustomButton';
 
 export default class Welcome extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcomeText}>Hello React-Native</Text>
-        <Button title="SIMPLE BUTTON" onPress={() => null} color="blue"/>
-        <View style={styles.inputContainer}>
-          <CustomButton title="PRESS ME"/>
-          <CustomButton title="NO! PRESS ME"/>
-        </View>
+        <Text style={styles.welcome}>
+          Guess That Song
+        </Text>
+        <CustomButton
+          onPress={this.props.onStartPlaying}
+          title="Start" />
       </View>
     );
   }
@@ -29,24 +27,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
-  inputContainer: {
-    width: 350,
-    height: 100,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  welcomeText: {
-    fontSize: 30
-  },
-  customButton: {
-    borderRadius: 4,
-    backgroundColor: "blue",
-    padding:10
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 20
+  welcome: {
+    fontSize: 40,
+    color: 'blue',
+    textAlign: 'center',
+    fontWeight: 'bold'
   }
 });

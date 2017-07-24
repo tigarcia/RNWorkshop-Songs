@@ -4,6 +4,6 @@
  * @flow
  */
 import { AppRegistry } from 'react-native';
-import Welcome from './src/Welcome';
+import GameContainer from './src/GameContainer';
 
-AppRegistry.registerComponent('SongGuessingGame', () => Welcome);
+AppRegistry.registerComponent('SongGuessingGame', () => GameContainer);
