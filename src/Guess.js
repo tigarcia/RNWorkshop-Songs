@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import RNFS from 'react-native-fs';
 import GuessInput from './GuessInput'
+import PlayHint from './PlayHint';
 import SongData from './SongData';
 
 const audioFile = 'audio.m4a';
