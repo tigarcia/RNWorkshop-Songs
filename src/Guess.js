@@ -6,6 +6,7 @@ import {
   StyleSheet
 } from 'react-native';
 import RNFS from 'react-native-fs';
+import GuessInput from './GuessInput'
 import SongData from './SongData';
 
 const audioFile = 'audio.m4a';
@@ -54,22 +55,18 @@ export default class Guess extends Component {
   }
 
   render() {
-    const {artist, trackName, album, audioUrl} = this.state.song;
-    const artistInfo = this.state.playAudio ?
-                  <View>
-                    <Text>Downloaded file for:</Text>
-                    <Text>{artist}</Text>
-                    <Text>{trackName}</Text>
-                    <Text>{album}</Text>
-                    <Text>{audioUrl}</Text>
-                  </View> :
-                  <ActivityIndicator size='large'/>;
+    const guessPage = this.state.playAudio ?
+      <GuessInput
+        style={styles.guessInput}
+        onChangeGuess={this.onChangeGuess}
+        onGuess={this.onGuess}
+        guess={this.state.guess}
+      /> :
+      <ActivityIndicator size='large'/>;
+
     return (
       <View style={styles.container}>
-        <Text style={{margin: 10, fontSize:20}}>
-          Start playing music!
-        </Text>
-        {artistInfo}
+        {guessPage}
       </View>
     );
   }
@@ -77,6 +74,19 @@ export default class Guess extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  flashMessage: {
+    flex: 0.4,
+    justifyContent: 'center'
+  },
+  flashMessageText: {
+    color: "red",
+    fontSize: 30,
+  },
+  guessInput: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
