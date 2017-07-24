@@ -1,28 +1,36 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
+  View,
   Text,
-  View
-} from 'react-native';
+  Button,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native'
+import CustomButton from './CustomButton';
 
 export default class Welcome extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={[
-            styles.containerRow,
-            {justifyContent: 'space-around'}
-          ]} >
-          <View style={styles.boxR} />
-          <View style={styles.boxR} />
-        </View>
-        <View style={styles.boxR} />
-        <View style={styles.containerRow} >
-          <View style={styles.boxB} />
-          <View style={styles.boxR} />
-          <View style={styles.boxB} />
-          <View style={styles.boxR} />
+        <Text style={styles.welcomeText}>Hello React-Native</Text>
+        <Button title="SIMPLE BUTTON" onPress={() => null} color="blue"/>
+        <View style={styles.inputContainer}>
+          <TouchableOpacity
+              style={styles.customButton}
+              color="blue">
+            <Text style={styles.buttonText}>PRESS ME</Text>
+          </TouchableOpacity>
+          <CustomButton onPress={() => console.warn("blahblah")} title="test"/>
+          <TouchableOpacity
+              style={styles.customButton}
+              color="blue">
+            <Text
+              style={[
+                styles.buttonText,
+                {fontSize: 25}
+              ]}>NO! PRESS ME</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -34,23 +42,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    flexDirection: 'column'
   },
-  containerRow: {
-    width: '100%',
+  inputContainer: {
+    width: 350,
     height: 100,
-    justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
-  boxR: {
-    width: 80,
-    height: 70,
-    backgroundColor: 'red'
+  welcomeText: {
+    fontSize: 30
   },
-  boxB: {
-    width: 80,
-    height: 70,
-    backgroundColor: 'blue'
+  customButton: {
+    borderRadius: 4,
+    backgroundColor: "blue",
+    padding:10
   },
+  buttonText: {
+    color: 'white',
+    fontSize: 20
+  }
 });
