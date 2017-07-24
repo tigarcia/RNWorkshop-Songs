@@ -16,18 +16,31 @@ export default class Guess extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      song: {},
-      playAudio: false
+      playAudio: false,
+      guess: '',
+      guessIncorrect: undefined,
+      song: {}
     }
-    this.downloadSong = this.downloadSong.bind(this);
-
+    this.downloadAndPlaySong = this.downloadAndPlaySong.bind(this);
+    this.onGuess = this.onGuess.bind(this);
+    this.onChangeGuess = this.onChangeGuess.bind(this);
+    this.onSongDone = this.onSongDone.bind(this);
   }
 
   componentDidMount() {
-    this.downloadSong()
+    this.downloadAndPlaySong()
   }
 
-  downloadSong() {
+  resetState(cb) {
+    this.setState({
+      playAudio: false,
+      guess: '',
+      guessIncorrect: undefined,
+      song: {}
+    }, cb);
+  }
+
+  downloadAndPlaySong() {
     const songId = SongData.randomSongId();
     fetch(`https://itunes.apple.com/us/lookup?id=${songId}`)
       .then(d => d.json())
@@ -51,33 +64,79 @@ export default class Guess extends Component {
       .then((d) => this.setState({playAudio: true}))
       .catch((err) => {
         console.warn("Download error: ", err);
-        this.downloadSong();
+        this.resetState(this.downloadAndPlaySong);
       })
   }
 
+  onSongDone() {
+    console.warn("Song Done");
+  }
+
+  onChangeGuess(guess) {
+    this.setState({guess});
+  }
+
+  onGuess() {
+    let result;
+    if (this.state.playAudio) {
+      if (this.verifyGuess(this.state.guess)) {
+        result = "CORRECT";
+      } else {
+        result = "INCORRECT :(";
+      }
+    }
+    console.warn(result, this.state.guess);
+  }
+
+  verifyGuess(guess) {
+    const guesses = guess.trim().toLowerCase().split(/\s+/);
+    const answers = `${this.state.song.artist} ${this.state.song.trackName}`
+                        .trim().toLowerCase();
+    return guesses.reduce(function(acc, g) {
+      if (answers.indexOf(g) >= 0) {
+        return true;
+      }
+      return acc;
+    }, false);
+  }
+
+
   render() {
-    const guessPage = this.state.playAudio ?
-      <GuessInput
-        style={styles.guessInput}
-        onChangeGuess={this.onChangeGuess}
-        onGuess={this.onGuess}
-        guess={this.state.guess}
-      /> :
-      <ActivityIndicator size='large'/>;
+    const {artist, trackName, album, audioUrl} = this.state.song;
+    const message = this.state.guessIncorrect ?
+      "Sorry, Try Again" : "";
+    const audioView = this.state.playAudio ?
+       [<GuessInput
+         key="guess"
+         style={styles.guessInput}
+         onChangeGuess={this.onChangeGuess}
+         onGuess={this.onGuess}
+         guess={this.state.guess}
+       />,
+       <PlayHint
+         key="play"
+         audioPath={audioPath}
+         audioFile={audioFile}
+         onSongDone={this.onSongDone}
+       />] :
+       <ActivityIndicator size='large'/>;
 
     return (
       <View style={styles.container}>
-        {guessPage}
+        <View style={styles.flashMessage}>
+          <Text style={styles.flashMessageText}>{message}</Text>
+        </View>
+        {audioView}
       </View>
     );
   }
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   flashMessage: {
     flex: 0.4,
@@ -88,8 +147,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   guessInput: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 0.6,
+    width: "100%",
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }
 });

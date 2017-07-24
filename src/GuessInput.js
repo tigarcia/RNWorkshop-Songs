@@ -22,9 +22,14 @@ export default (props) => (
 
 const styles = StyleSheet.create({
   guess: {
-    backgroundColor: '#ededed',
-    height: 50,
-    width: 250,
-    marginBottom: 15
+    backgroundColor: 'white',
+    height: 60,
+    width: "80%",
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'grey',
+    marginBottom: 50,
+    fontSize: 25,
   }
 });
