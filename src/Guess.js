@@ -1,8 +1,84 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet
+} from 'react-native';
+import RNFS from 'react-native-fs';
+import SongData from './SongData';
 
-export default () => (
-  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <Text>Start playing music!</Text>
-  </View>
-);
+const audioFile = 'audio.m4a';
+const audioPath = RNFS.DocumentDirectoryPath;
+export default class Guess extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      song: {},
+      playAudio: false
+    }
+    this.downloadSong = this.downloadSong.bind(this);
+
+  }
+
+  componentDidMount() {
+    this.downloadSong()
+  }
+
+  downloadSong() {
+    const songId = SongData.randomSongId();
+    fetch(`https://itunes.apple.com/us/lookup?id=${songId}`)
+      .then(d => d.json())
+      .then(d => {
+        let song = {};
+        song.artist = d.results[0].artistName;
+        song.id = d.results[0].artistId;
+        song.album = d.results[0].collectionName;
+        song.trackName = d.results[0].trackName;
+        song.audioUrl = d.results[0].previewUrl;
+
+        this.setState({song});
+        return song;
+      })
+      .then((s) => {
+        return RNFS.downloadFile({
+          fromUrl: s.audioUrl,
+          toFile: `${audioPath}/${audioFile}`
+        }).promise;
+      })
+      .then((d) => this.setState({playAudio: true}))
+      .catch((err) => {
+        console.warn("Download error: ", err);
+        this.downloadSong();
+      })
+  }
+
+  render() {
+    const {artist, trackName, album, audioUrl} = this.state.song;
+    const artistInfo = this.state.playAudio ?
+                  <View>
+                    <Text>Downloaded file for:</Text>
+                    <Text>{artist}</Text>
+                    <Text>{trackName}</Text>
+                    <Text>{album}</Text>
+                    <Text>{audioUrl}</Text>
+                  </View> :
+                  <ActivityIndicator size='large'/>;
+    return (
+      <View style={styles.container}>
+        <Text style={{margin: 10, fontSize:20}}>
+          Start playing music!
+        </Text>
+        {artistInfo}
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
