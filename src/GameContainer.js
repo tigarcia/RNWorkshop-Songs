@@ -9,9 +9,17 @@ export default class GameContainer extends Component {
     this.state = {
       startGame: false
     };
+
+    this.onStartPlaying = this.onStartPlaying.bind(this);
+  }
+
+  onStartPlaying() {
+    this.setState({startGame: true});
   }
 
   render() {
-    return <Welcome/>;
+   return this.state.startGame ?
+              <Guess/> :
+              <Welcome onStartPlaying={this.onStartPlaying} />;
   }
 }
