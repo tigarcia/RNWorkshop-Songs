@@ -467,6 +467,120 @@ export default class RandomColor extends Component {
 }
 ```
 
+### setState: Things To Remember
+
+`setState` seems like a straight forward API when you are first learning, but there are some very important things to be aware of.
+
+* __`setState` is asynchronous__
+
+In the following example, the console.warn of `this.state.color` will not be updated because `setState` is asynchronous.
+
+```js
+import React, { Component } from 'react'
+import {Text} from 'react-native'
+
+export default class RandomColor extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      color: 'red'
+    };
+    setInterval(() => {
+      const colors = ['red', 'green', 'blue', 'yellow', 'indigo'];
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      this.setState({color});
+      console.warn(this.state.color);
+    }, 6000);
+  }
+
+  render() {
+    return (
+      <Text style={{color: this.state.color}}>
+        Text Changes Colors
+      </Text>
+    );
+  }
+}
+```
+
+* __State should be considered immutable__
+
+This is a core concept in react that is often confused.  The rule is, __never modify state directly__. The only way you should change the state is with the `setState` function.
+
+For example:
+
+```
+export default class Welcome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      players: [
+        {name: "Tim", scores: [4,5,9]},
+        {name: "Moxie", scores: [7,8,11]},
+        {name: "Katie", scores: [9,4,12]}
+      ]
+    };
+    this.removeMoxie = this.removeMoxie.bind(this);
+    this.removeScore = this.removeScore.bind(this);
+  }
+
+  removeMoxie() {
+    let players = this.state.players.filter(p => p.name !== 'Moxie');
+    this.setState({players});
+  }
+
+  removeScore() {
+    let randomPlayer = Math.floor(this.state.players.length * Math.random());
+    let players = this.state.players.map((p, i) => {
+      if (i !== randomPlayer) {
+        return p;
+      }
+      let scores = p.scores.slice(1);
+      return {
+        name: p.name,
+        scores
+      };
+    });
+    this.setState({players});
+  }
+
+  render() {
+    let players = this.state.players.map((p, i) => (
+      <View key={i}>
+        <Text style={{fontSize: 20}}>{p.name} - {JSON.stringify(p.scores)}</Text>
+      </View>
+    ));
+    return (
+      <View style={styles.container}>
+        {players}
+        <View style={styles.buttons}>
+          <Button title="Remove Score"
+                  onPress={this.removeScore}/>
+          <Button title="Remove Moxie"
+                  onPress={this.removeMoxie}/>
+        </View>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+    flexDirection: 'column'
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: "100%"
+  }
+});
+```
+
+
 ### Creating a Custom Button
 
 Let's create a customized button that we'll use throughout our app.  The button will look similar the customized button in this mockup:
@@ -614,6 +728,7 @@ Navigation has been a bit of a community pain point for react native.  Here is a
 * __Navigator__ - Also part of react-native.  Implemented in JS.  Also seems out of favor. __<span style="color:red">NOT RECOMENDED</span>__
 * __NavigationExperimental__ - Part of react-native. A popular choice if you are adding redux to your app.  Not recommended if you do not use redux.
 * __react-native-navigation__ - A native implementation of navigation from wix.  If you want native components, this is a good bet.
+* __React Router 4__ - Popular in the web world.  This is a viable option as well.  A description of the features is in [this talk](https://www.youtube.com/watch?v=42ogpJVwtw0)
 * __ex-navigation__ - Exponent's navigation library.  Popular but not being actively supported.  Instead...
 * __react-navigation__ - A new project supported by exponent and facebook. The plan is for react-navigation to replace NavigationExperimental.  Check it out at [https://reactnavigation.org/](https://reactnavigation.org/)
 
