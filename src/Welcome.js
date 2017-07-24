@@ -21,7 +21,6 @@ export default class Welcome extends Component {
               color="blue">
             <Text style={styles.buttonText}>PRESS ME</Text>
           </TouchableOpacity>
-          <CustomButton onPress={() => console.warn("blahblah")} title="test"/>
           <TouchableOpacity
               style={styles.customButton}
               color="blue">
