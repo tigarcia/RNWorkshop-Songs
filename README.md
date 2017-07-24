@@ -27,7 +27,7 @@ __Contact__: Please get in touch!
 6. Debug your react-native app
 7. Practice ES2015 syntax for classes, import, arrow functions, const, let, string templates, spread operator 
 8. Use lifecycle events like `componentDidMount`, `componentWillUnmount`, and `shouldComponentUpdate`
-9. Understand the state of navigation in react-native and implement navigation with react-nativation
+9. Understand the state of navigation in react-native and implement navigation with [react-nativation](https://reactnavigation.org/)
 
 ## React Native
 
@@ -93,7 +93,7 @@ The cli will create a folder and install the files you need inside.  Here are so
 * __android__: A directory that contains build settings for android. The gradle build scrips will be in here.
 
 
-## Basic Components
+## Basic Components and JSX
 
 React native does not use the DOM, so no html.  Instead we must use native components.  We'll start with:
 
@@ -154,6 +154,214 @@ const styles = StyleSheet.create({
 AppRegistry.registerComponent('SongGuessingGame', () => SongGuessingGame);
 ```
 
+### React Native Styling
+
+Many of the styles that you use in react native are very similar to what you'll use on the web.
+
+For example, the following (hopefully familiar) styles exist in react native:
+
+* height
+* width
+* backgroundColor
+* margin
+* padding
+* fontSize
+* fontWeight
+* color
+
+### StyleSheet.create
+
+To add a style to a component, you can do a few things. Commonly, you'll import `StyleSheet` from `react-native` and use `StyleSheet.create` which accepts an object of styles.  Here is an example that gives text some styling:
+
+```
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+export default class SongGuessingGame extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={styles.text}>
+          Welcome to React Native!
+        </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  text: {
+    color: '#ff0000',
+    fontWeight: 'bold',
+    fontSize: 50,
+  },
+});
+
+AppRegistry.registerComponent('SongGuessingGame', () => SongGuessingGame);
+
+```
+
+Notice that the text takes a style prop, that accepts a JavaScript object from `StyleSheet.create`.  We can also just put our styles inline:
+
+```
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+export default class FirstApp extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={{
+           color: '#ff0000',
+           fontWeight: 'bold',
+           fontSize: 50,
+        }}>
+          Welcome to React Native!
+        </Text>
+      </View>
+    );
+  }
+}
+
+AppRegistry.registerComponent('FirstApp', () => FirstApp);
+```
+
+We don't need to use `StyleSheet.create` in this case because we are providing the style object directly to the Text component.  It is a good idea to use `StyleSheet.create` though because it checks to make sure the styles you provided in your objects are all valid react native styles.
+
+### Array of Styles
+
+One more thing you can do with styling is provide an array.  Say you'd like to override one style:
+
+
+
+```
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+export default class FirstApp extends Component {
+  render() {
+    return (
+      <View>
+        <Text style={[styles.text, {fontSize: 35}]}>
+          Welcome to React Native!
+        </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  text: {
+    color: '#ff0000',
+    fontWeight: 'bold',
+    fontSize: 50,
+  },
+});
+
+AppRegistry.registerComponent('FirstApp', () => FirstApp);
+
+```
+
+Since `fontSize: 35` is later in the array, it will overwrite the first style.
+
+### Flexbox Styling
+
+React Native takes advantage of many modern web features.  One of those is __flexbox__ for layout.  The version of flexbox in React Native is slightly different than the web version of flexbox, but I'll point out differences whenever possible.
+
+Some of the important concepts to understand:
+
+#### flexDirection
+
+Determines the primary axis for the flexbox flow.  By default the `flexDirection` is set to `column`, which means that elements on the page stack vertically  in the view.  The other option is `row`, which means that the elements are positioned next to each other in a row.
+
+Try the following example and switch the flexDirection between row and column:
+
+```js
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+export default class SongGuessingGame extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.box}/>
+        <View style={[styles.box, {backgroundColor: 'blue'}]}/>
+        <View style={[styles.box, {backgroundColor: 'green'}]}/>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  box: {
+    backgroundColor: 'red',
+    width: 70,
+    height: 70,
+  }
+});
+```
+
+#### justifyContent
+
+Acts on the primary axis in the flexbox flow.  So if the primary direction is `flexDirection: 'column'` and content is `justifyContent: center` all of the items will be be bunched together in the center in the available vertical space.
+
+However, if the flexDirection is `flexDirection: 'row'` and the content is `justifyContent: center`, all of the content will be bunched together in the center of the horizontal space
+
+You can read all of the properties for `justifyContent` in the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content)
+
+#### alignItems
+
+Acts on the secondary axis in the flexbox flow.  So if the flexDirection is ``flexDirection: 'column'`, `alignItems` will align horizontally, and if the flexDirection is `flexDirection: 'row'`, `alignItems` will align vertically.
+
+You can check out the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/CSS/align-items) for align items as well.
+
+#### width and height
+
+React native styling also supports width and height.  As of [February 2017](https://github.com/facebook/react-native/releases/tag/v0.42.0), react native supports percentages for widths and heights!  So you can now do something like this:
+
+```
+conatinerRow: {
+    width: '100%',
+    height: 100
+}
+```
+
+#### flex
+
+This property accepts a number and determines the proportion of the available space to occupy.  For example, if there are two elements, both with a value of `flex: 1`, the two elements will both be given have the space.  The value of flex doesn't exactly matter, just the proportion.  So the same behavior would happen if both elements have `flex: 0.5`.  You can read more about flex in [react native docs](https://facebook.github.io/react-native/docs/layout-props.html#flex)
+
+#### Flexbox Practice
+
+To get more practice with flexbox, try [flexbox froggy](http://flexboxfroggy.com/).  Not all of the styles on the site apply to react native (the reverse options don't exist for example), but much of them apply.
+
+
 
 ### First Component
 
@@ -191,15 +399,7 @@ import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 import Welcome from './src/Welcome'
 
-export default class SongGuessingGame extends Component {
-  render() {
-    return (
-      <Welcome />
-    );
-  }
-}
-
-AppRegistry.registerComponent('SongGuessingGame', () => SongGuessingGame);
+AppRegistry.registerComponent('SongGuessingGame', () => Welcome);
 ```
 
 
@@ -214,7 +414,7 @@ git checkout style-exercise
 
 Then get the ui to look like the mock up below:
 
-![](./react-native-styling-mock.png)
+![smile face mock](./images/react-native-smile-mock.png)
 
 To see a solution:
 
@@ -269,7 +469,9 @@ export default class RandomColor extends Component {
 
 ### Creating a Custom Button
 
-Let's create a customized button that we'll use throughout our app.  The button will look similar to our mockup above:
+Let's create a customized button that we'll use throughout our app.  The button will look similar the customized button in this mockup:
+
+![buttons mock up](./images/react-native-buttons-mock.png)
 
 ```
 git checkout custom-button-starter
