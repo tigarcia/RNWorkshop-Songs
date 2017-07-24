@@ -217,7 +217,7 @@ import {
   View
 } from 'react-native';
 
-export default class FirstApp extends Component {
+export default class SongGuessingGame extends Component {
   render() {
     return (
       <View>
@@ -233,7 +233,7 @@ export default class FirstApp extends Component {
   }
 }
 
-AppRegistry.registerComponent('FirstApp', () => FirstApp);
+AppRegistry.registerComponent('SongGuessingGame', () => SongGuessingGame);
 ```
 
 We don't need to use `StyleSheet.create` in this case because we are providing the style object directly to the Text component.  It is a good idea to use `StyleSheet.create` though because it checks to make sure the styles you provided in your objects are all valid react native styles.
